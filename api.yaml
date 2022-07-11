@@ -1,0 +1,1209 @@
+openapi: 3.0.0
+
+# API information
+info:
+  title: Performance Manager
+  description: Description
+  version: '1.0.0'
+  contact:
+    email:
+
+# Servers
+servers:
+  - url: http://localhost:5000/api
+    description: Development server1
+  # - url: http://localhost:8080
+  #   description: Development server2
+  # - url: https://performance-manager-123.herokuapp.com
+  #   description: Development server Over the internent
+
+# Components
+components:
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      in: header
+      bearerFormat: JWT
+
+  schemas:
+    serverHelthCheck:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'all good here!'
+    user:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        username: 'SOL'
+        email: 'bjjd.597@gmail.com'
+        password: '123456'
+
+    signin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: 'bjjd.597@gmail.com'
+        password: '123456'
+paths:
+  /status:
+    get:
+      summary: 'Server Health Check'
+      description: ''
+      tags:
+        - Main
+      responses:
+        200:
+          description: all good here!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/serverHelthCheck'
+
+  /users/signup:
+    post:
+      summary: Register an account
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/user'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+  
+  /users/signin:
+    post:
+      summary: Sign in by using email and password
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/signin'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                example:
+                  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjhlMjY1OWJmODA0YTgwNjNhOGU2ZWMiLCJlYW1pbCI6ImJqamQuNTk3QGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImJqamQuNTk3IiwiaWF0IjoxNjUzNDg1MDM2fQ._VJhryYDXQAxFFhy9kjR7MNtwy6sheBAsOzkrc5NASw'
+
+
+ 
+
+  /organization/organization-availability:
+    post:
+      summary: check that organization is already registered or not
+      tags:
+        - Organisation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              type: object
+              properties:
+                organization_name:
+                  type: string
+              example:
+                organization_name: 'SOL'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+  /organization/registration-availability:
+    post:
+      summary: check that registration is already exist or not
+      tags:
+        - Organisation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              type: object
+              properties:
+                organization_reg_no:
+                  type: string
+              example:
+                organization_reg_no: '12340987'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+  /organization/email-availability:
+    post:
+      summary: check that email is already registered or not
+      tags:
+        - Organisation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              type: object
+              properties:
+                email:
+                  type: string
+              example:
+                email: 'bjjd.597@gmail.com'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+  /organization:
+    get:
+      summary: Get organization
+      description: ''
+      tags:
+        - Organisation
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/organization'
+
+    put:
+      summary: Update Organization
+      tags:
+        - Organisation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/organization'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organization'
+
+    delete:
+      summary: Delete organization
+      tags:
+        - Organisation
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+              example: 'Organization Deleted!'
+
+  /staff/email-availability:
+    post:
+      summary: To check that the email is availabel or not for new staff or profile update.
+      tags:
+        - Staff
+      # security:
+      #   - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              type: object
+              properties:
+                email:
+                  type: string
+              example:
+                email: 'staff@gmail.com'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+  /staff:
+    get:
+      summary: Get all staff.
+      description: ''
+      tags:
+        - Staff
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+
+    post:
+      summary: Add new staff
+      tags:
+        - Staff
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/staff'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+              $ref: '#/components/schemas/staff'
+  /staff/{id}:
+    put:
+      summary: Update user profile
+      tags:
+        - Staff
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put staff id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/staff'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/staff'
+
+    delete:
+      summary: Delete staff profile
+      tags:
+        - Staff
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put staff id to delete.
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                 type: string
+                  properties:
+                  message: 'Staff deleted!'
+
+  /department:
+    get:
+      summary: Get all departments.
+      description: ''
+      tags:
+        - Department
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Department
+      tags:
+        - Department
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/department'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/department'
+
+  /department/{id}:
+    put:
+      summary: Update department
+      tags:
+        - Department
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put department id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/department'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/department'
+
+    delete:
+      summary: Delete department
+      tags:
+        - Department
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'departemnt deleted!'
+
+  /goal:
+    get:
+      summary: Get all goals.
+      description: ''
+      tags:
+        - Goals
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Goal
+      tags:
+        - Goals
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/goal'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+
+  /goal/{id}:
+    put:
+      summary: Update goal
+      tags:
+        - Goals
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put goal id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/goal'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+
+    delete:
+      summary: Delete goal
+      tags:
+        - Goals
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Goal ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'goal deleted!'
+
+
+  /report:
+    get:
+      summary: Get all reports.
+      description: ''
+      tags:
+        - Reports
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Report
+      tags:
+        - Reports
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/report'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report'
+
+  /report/{id}:
+    put:
+      summary: Update report
+      tags:
+        - Reports
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put report id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/report'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report'
+
+    delete:
+      summary: Delete report
+      tags:
+        - Reports
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Report ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'report deleted!'
+                  
+  /score-card/monthly-cumulative-report:
+    get:
+        summary: Get monthly cumulative report.
+        description: ''
+        tags:
+          - Score Cards
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: ''
+            content:
+              application/json:
+                schema:
+
+  /score-card:
+    get:
+      summary: Get all score cards.
+      description: ''
+      tags:
+        - Score Cards
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Score Card
+      tags:
+        - Score Cards
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/score_card'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/score_card'
+
+  /score-card/{id}:
+    put:
+      summary: Update score card
+      tags:
+        - Score Cards
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put score card id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/score_card'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/score_card'
+
+    delete:
+      summary: Delete score card
+      tags:
+        - Score Cards
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Score Card ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'score card deleted!'
+
+  /weekly-reports:
+    get:
+      summary: Get all weekly reports.
+      description: ''
+      tags:
+        - Weekly Reports
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Weekly Report
+      tags:
+        - Weekly Reports
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/weekly_report'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weekly_report'
+
+  /weekly-reports/{id}:
+    put:
+      summary: Update weekly reports
+      tags:
+        - Weekly Reports
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put weekly report id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/weekly_report'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weekly_report'
+
+    delete:
+      summary: Delete weekly report
+      tags:
+        - Weekly Reports
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: weekly report id
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                example:
+                  message: 'Weekly report deleted!'
+
+
+
+  /task:
+    get:
+      summary: Get all tasks.
+      description: ''
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Task
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/task'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+
+  /task/{id}:
+    put:
+      summary: Update task
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put task id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/task'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+
+    delete:
+      summary: Delete task
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Task ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'task deleted!'
+
+
+  /unit:
+    get:
+      summary: Get all units.
+      description: ''
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Unit
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/unit'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unit'
+
+  /unit/{id}:
+    put:
+      summary: Update unit
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put unit id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/unit'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unit'
+
+    delete:
+      summary: Delete unit
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Unit ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'unit deleted!'
+
+  /sbu:
+    get:
+      summary: Get all sbu.
+      description: ''
+      tags:
+        - SBU
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add SBU
+      tags:
+        - SBU
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/sbu'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sbu'
+
+  /sbu/{id}:
+    put:
+      summary: Update sbu
+      tags:
+        - SBU
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put sbu id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/sbu'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sbu'
+
+    delete:
+      summary: Delete sbu
+      tags:
+        - SBU
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: SBU ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "SBU deleted!"
+  /report_types:
+    get:
+      summary: Get all report_types.
+      description: ''
+      tags:
+        - REPORT_TYPES
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add report_type
+      tags:
+        - REPORT_TYPES
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/report_types'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report_types'
+
+  /report_types/{id}:
+    put:
+      summary: Update report_type
+      tags:
+        - REPORT_TYPES
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put report_type id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/report_types'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report_types'
+
+    delete:
+      summary: Delete report_type
+      tags:
+        - REPORT_TYPES
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: REPORT_TYPE ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'REPORT_TYPE deleted!'
+
+
+  /user-role:
+    get:
+      summary: Get all user-roles.
+      description: ''
+      tags:
+        - User Role
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+    post:
+      summary: Add Goal
+      tags:
+        - User Role
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/user_role'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_role'
+
+  /user-role/{id}:
+    put:
+      summary: Update user-role
+      tags:
+        - User Role
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Put user-role id to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # Request body contents
+              $ref: '#/components/schemas/user_role'
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_role'
+
+    delete:
+      summary: Delete user-role
+      tags:
+        - User Role
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Goal ID
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message: 'user-role deleted!'
